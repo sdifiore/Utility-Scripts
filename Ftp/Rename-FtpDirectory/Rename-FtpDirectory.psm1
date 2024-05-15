@@ -88,7 +88,7 @@ function Rename-FtpDirectory
             $listStream = $listResponse.GetResponseStream()
             $listReader = New-Object System.IO.StreamReader($listStream)
 
-            while (!$listReader.EndOfStream)
+            while (-not $listReader.EndOfStream)
             {
                 $file = $listReader.ReadLine()
                 $files.Add($file) | Out-Null

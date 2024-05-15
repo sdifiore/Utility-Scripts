@@ -38,7 +38,7 @@ function New-FtpDirectory
 
         $srcEntries = Get-ChildItem $LocalFolderPath -Recurse
         $srcFolders = $srcEntries | Where-Object { $PSItem.PSIsContainer }
-        $srcFiles = $srcEntries | Where-Object { !$PSItem.PSIsContainer }
+        $srcFiles = $srcEntries | Where-Object { -not $PSItem.PSIsContainer }
 
         # Create folder.
         try

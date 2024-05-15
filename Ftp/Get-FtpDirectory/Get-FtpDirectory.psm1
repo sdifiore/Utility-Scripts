@@ -49,7 +49,7 @@ function Get-FtpDirectory
             $listStream = $listResponse.GetResponseStream()
             $listReader = New-Object System.IO.StreamReader($listStream)
 
-            while (!$listReader.EndOfStream)
+            while (-not $listReader.EndOfStream)
             {
                 $line = $listReader.ReadLine()
                 $lines.Add($line) | Out-Null
@@ -73,7 +73,7 @@ function Get-FtpDirectory
 
             if ($isDirectory)
             {
-                if (!(Test-Path $localFilePath -PathType container))
+                if (-not (Test-Path $localFilePath -PathType container))
                 {
                     Write-Verbose "Creating directory $localFilePath"
                     New-Item $localFilePath -Type directory | Out-Null

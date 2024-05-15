@@ -72,7 +72,7 @@ function Test-VSProjectConsistency
     Process
     {
         # If the path is invalid, then return an error.
-        if (!(Test-Path $Path))
+        if (-not (Test-Path $Path))
         {
             Write-Error ('File or folder not found!')
             return
@@ -131,7 +131,7 @@ function Test-VSProjectConsistency
         # Adding additional whitelisted extensions to the whitelist.
         foreach ($extension in $AdditionalFileExtensions)
         {
-            if (!$extension.StartsWith('.'))
+            if (-not $extension.StartsWith('.'))
             {
                 $extension = '.' + $extension
             }
@@ -214,7 +214,7 @@ function Test-VSProjectConsistency
             $projectFoldersInTheProjectFolder = @()
             Get-ChildItem -Path $projectFolder -Recurse |
                 Where-Object { (PathNotContainsAnyFolder -FullFolderPath $PSItem.FullName -Folders $directoriesToSkip) -and
-                    !$PSItem.FullName.Substring($projectFolder.Length).StartsWith('.') -and
+                    -not $PSItem.FullName.Substring($projectFolder.Length).StartsWith('.') -and
                     (FolderContainsCsproj $PSItem.FullName)
                 } |
                 ForEach-Object { $projectFoldersInTheProjectFolder += $PSItem }
@@ -239,7 +239,7 @@ function Test-VSProjectConsistency
                     continue
                 }
 
-                if (!$matchingFilesInProjectFile.ToLower().Contains($file.ToLower()))
+                if (-not $matchingFilesInProjectFile.ToLower().Contains($file.ToLower()))
                 {
                     $missingFilesFromProject += $file
                 }
@@ -267,7 +267,7 @@ function Test-VSProjectConsistency
             $helperListForDuplicatedFiles = @()
             foreach ($file in $matchingFilesInProjectFile)
             {
-                if (!$matchingFilesInFolder.ToLower().Contains($file.ToLower()))
+                if (-not $matchingFilesInFolder.ToLower().Contains($file.ToLower()))
                 {
                     $missingFilesFromFolder += $file
                 }
@@ -313,7 +313,7 @@ function Test-VSProjectConsistency
             $mapAndMinFilesWithoutParent = @()
             foreach ($mapFile in $matchingFilesInProjectFile | Where-Object { $PSItem -match '\.map$' })
             {
-                if (!$matchingFilesInProjectFile.Contains($mapFile.Substring(0, $mapFile.Length - 4)))
+                if (-not $matchingFilesInProjectFile.Contains($mapFile.Substring(0, $mapFile.Length - 4)))
                 {
                     $mapAndMinFilesWithoutParent += $mapFile
                 }
@@ -321,7 +321,7 @@ function Test-VSProjectConsistency
             foreach ($minFile in $matchingFilesInProjectFile | Where-Object { $PSItem -match '\.min\.' })
             {
                 $minFileWithoutMin = $minFile -replace '\.min\.', '.'
-                if (!($matchingFilesInProjectFile.Contains(($minFileWithoutMin)) -or
+                if (-not ($matchingFilesInProjectFile.Contains(($minFileWithoutMin)) -or
                         $matchingFilesInProjectFile.Contains(($minFileWithoutMin -replace '\.map', ''))))
                 {
                     $mapAndMinFilesWithoutParent += $minFile

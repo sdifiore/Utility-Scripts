@@ -26,7 +26,7 @@ function Test-SqlServerDatabase
 
     Process
     {
-        if (!(Test-SqlServer $SqlServerName $UserName $Password))
+        if (-not (Test-SqlServer $SqlServerName $UserName $Password))
         {
             throw ("Could not find SQL Server at `"$SqlServerName`"!")
         }
