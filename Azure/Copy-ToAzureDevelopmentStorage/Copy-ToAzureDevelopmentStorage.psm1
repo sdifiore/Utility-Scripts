@@ -24,7 +24,7 @@ function Copy-ToAzureDevelopmentStorage
 
     Process
     {
-        if (!(Test-Path $Path))
+        if (-not (Test-Path $Path))
         {
             throw ('The path specified is not valid!')
         }
@@ -38,7 +38,7 @@ function Copy-ToAzureDevelopmentStorage
 
         foreach ($folder in Get-ChildItem $Path | Where-Object { $PSItem.PSIsContainer })
         {
-            if ($null -eq $containers -or $containers.Count -eq 0 -or !($containers | Select-Object -ExpandProperty 'Name').Contains($folder.Name))
+            if ($null -eq $containers -or $containers.Count -eq 0 -or -not ($containers | Select-Object -ExpandProperty 'Name').Contains($folder.Name))
             {
                 New-AzStorageContainer -Context $storageContext -Name $folder.Name -Permission Blob
             }

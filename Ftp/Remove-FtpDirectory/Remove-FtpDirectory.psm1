@@ -45,7 +45,7 @@ function Remove-FtpDirectory
             $listStream = $listResponse.GetResponseStream()
             $listReader = New-Object System.IO.StreamReader($listStream)
 
-            while (!$listReader.EndOfStream)
+            while (-not $listReader.EndOfStream)
             {
                 $line = $listReader.ReadLine()
                 $lines.Add($line) | Out-Null

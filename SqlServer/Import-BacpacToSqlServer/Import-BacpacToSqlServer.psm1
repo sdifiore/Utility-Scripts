@@ -83,7 +83,7 @@ function Import-BacpacToSqlServer
     {
         # Setting up SQL Package executable path.
         $sqlPackageExecutablePath = ''
-        if (![string]::IsNullOrEmpty($SqlPackageExecutablePath) -and (Test-Path $SqlPackageExecutablePath))
+        if (-not [string]::IsNullOrEmpty($SqlPackageExecutablePath) -and (Test-Path $SqlPackageExecutablePath))
         {
             $sqlPackageExecutablePath = $SqlPackageExecutablePath
         }
@@ -122,7 +122,7 @@ function Import-BacpacToSqlServer
 
         # Checking the validity of the bacpac file.
         $bacpacFile = Get-Item $BacpacPath
-        if ($null -eq $bacpacFile -or !($bacpacFile -is [System.IO.FileInfo]) -or !($bacpacFile.Extension -eq '.bacpac'))
+        if ($null -eq $bacpacFile -or -not ($bacpacFile -is [System.IO.FileInfo]) -or -not ($bacpacFile.Extension -eq '.bacpac'))
         {
             throw "The .bacpac file is not found at '$BacpacPath'!"
         }
@@ -137,7 +137,7 @@ function Import-BacpacToSqlServer
             $serverSegment = $connectionStringSegments | Where-Object {
                 $PSItem.StartsWith('Data Source=') -or $PSItem.StartsWith('Server=')
             }
-            if (!([string]::IsNullOrEmpty($serverSegment)))
+            if (-not [string]::IsNullOrEmpty($serverSegment))
             {
                 $SqlServerName = $serverSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
@@ -145,19 +145,19 @@ function Import-BacpacToSqlServer
             $databaseSegment = $connectionStringSegments | Where-Object {
                 $PSItem.StartsWith('Initial Catalog=') -or $PSItem.StartsWith('Database=')
             }
-            if (!([string]::IsNullOrEmpty($databaseSegment)))
+            if (-not [string]::IsNullOrEmpty($databaseSegment))
             {
                 $DatabaseName = $databaseSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
             $UsernameSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('User Id=') }
-            if (!([string]::IsNullOrEmpty($UsernameSegment)))
+            if (-not [string]::IsNullOrEmpty($UsernameSegment))
             {
                 $Username = $UsernameSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
             $PasswordSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('Password=') }
-            if (!([string]::IsNullOrEmpty($PasswordSegment)))
+            if (-not [string]::IsNullOrEmpty($PasswordSegment))
             {
                 $Password = $PasswordSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
@@ -189,16 +189,16 @@ function Import-BacpacToSqlServer
         }
 
         $securePassword = $null
-        if (![string]::IsNullOrEmpty($Password))
+        if (-not [string]::IsNullOrEmpty($Password))
         {
             $securePassword = ConvertTo-SecureString $Password -AsPlainText -Force
         }
-        if (!(Test-SqlServer $SqlServerName $Username $securePassword))
+        if (-not (Test-SqlServer $SqlServerName $Username $securePassword))
         {
             Write-Warning "Could not find SQL Server at '$SqlServerName'!"
             $SqlServerName = 'localhost'
 
-            if (!(Test-SqlServer $SqlServerName))
+            if (-not (Test-SqlServer $SqlServerName))
             {
                 throw 'Could not find any SQL Server instances!'
             }
@@ -224,7 +224,7 @@ function Import-BacpacToSqlServer
             "/SourceFile:`"$BacpacPath`""
         )
 
-        if (![string]::IsNullOrEmpty($Username) -and ![string]::IsNullOrEmpty($Password))
+        if (-not [string]::IsNullOrEmpty($Username) -and -not [string]::IsNullOrEmpty($Password))
         {
             $parameters += "/TargetUser:`"$Username`""
             $parameters += "/TargetPassword:`"$Password`""

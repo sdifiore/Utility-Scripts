@@ -26,7 +26,7 @@ function Restart-Site
     Process
     {
         # If the path is invalid, then return an error.
-        if (!(Test-Path ($Path)))
+        if (-not (Test-Path ($Path)))
         {
             Write-Error ('File or folder not found!')
             return
@@ -50,7 +50,7 @@ function Restart-Site
                 {
                     Get-ChildItem -Path $PSItem.FullName -Recurse -File |
                         ForEach-Object {
-                            if (!$whiteList.Contains($PSItem.FullName.Substring($Path.Length)))
+                            if (-not $whiteList.Contains($PSItem.FullName.Substring($Path.Length)))
                             {
                                 Remove-Item $PSItem.FullName -Force
                             }

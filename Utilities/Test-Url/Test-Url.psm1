@@ -61,7 +61,7 @@ function Test-Url
                 Start-Sleep -Seconds $Interval
             }
         }
-        while (!$success)
+        while (-not $success)
 
         return $true
     }
