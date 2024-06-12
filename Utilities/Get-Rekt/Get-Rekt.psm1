@@ -18,7 +18,7 @@ function Get-Rekt
 
     Process
     {
-        Write-Host 'Get Rekt!'
+        Write-Host $LastExitCode
         throw [System.OutOfMemoryException] 'Get Rekt!'
     }
 }
