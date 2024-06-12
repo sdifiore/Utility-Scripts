@@ -82,10 +82,10 @@ function Import-BacpacToSqlServer
     Process
     {
         # Setting up SQL Package executable path.
-        $sqlPackageExecutablePath = ''
+        $finalSqlPackageExecutablePath = ''
         if (-not [string]::IsNullOrEmpty($SqlPackageExecutablePath) -and (Test-Path $SqlPackageExecutablePath))
         {
-            $sqlPackageExecutablePath = $SqlPackageExecutablePath
+            $finalSqlPackageExecutablePath = $SqlPackageExecutablePath
         }
         else
         {
@@ -107,12 +107,12 @@ function Import-BacpacToSqlServer
 
             if ([string]::IsNullOrWhiteSpace($locatedPath))
             {
-                $sqlPackageExecutablePath = $defaultSqlPackageExecutablePath
-                Write-Verbose "SQL Package executable for importing the database found at '$sqlPackageExecutablePath'!"
+                $finalSqlPackageExecutablePath = $defaultSqlPackageExecutablePath
+                Write-Verbose "SQL Package executable for importing the database found at '$finalSqlPackageExecutablePath'!"
             }
         }
 
-        if ([string]::IsNullOrEmpty($sqlPackageExecutablePath))
+        if ([string]::IsNullOrEmpty($finalSqlPackageExecutablePath))
         {
             throw ('No SQL Package executable found for importing the database! You can download it from' +
                 ' "https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage-download"!')
@@ -231,7 +231,7 @@ function Import-BacpacToSqlServer
         }
 
         # And now we get to actually importing the database after setting up all the necessary parameters.
-        & "$sqlPackageExecutablePath" @parameters
+        & "$finalSqlPackageExecutablePath" @parameters
 
 
 
