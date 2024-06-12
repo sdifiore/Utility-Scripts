@@ -31,7 +31,7 @@ function Get-ProcessId
 
         if (-not $CommandLine) { return $processes | ForEach-Object { $PSItem.Id } }
 
-        [hashtable[]] $processes = $(if ($host.Version.Major -ge 7)
+        [hashtable[]] $processes = $(if ($Host.Version.Major -ge 7)
             {
                 $processes | ForEach-Object { @{ Id = $PSItem.Id; CommandLine = $PSItem.CommandLine } }
             }
