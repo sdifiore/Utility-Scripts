@@ -150,16 +150,16 @@ function Import-BacpacToSqlServer
                 $DatabaseName = $databaseSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
-            $UsernameSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('User Id=') }
-            if (-not [string]::IsNullOrEmpty($UsernameSegment))
+            $usernameSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('User Id=') }
+            if (-not [string]::IsNullOrEmpty($usernameSegment))
             {
-                $Username = $UsernameSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
+                $Username = $usernameSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
-            $PasswordSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('Password=') }
-            if (-not [string]::IsNullOrEmpty($PasswordSegment))
+            $passwordSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('Password=') }
+            if (-not [string]::IsNullOrEmpty($passwordSegment))
             {
-                $Password = $PasswordSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
+                $Password = $passwordSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
         }
 
@@ -242,7 +242,7 @@ function Import-BacpacToSqlServer
             # imported.
             if ($databaseExists)
             {
-                $server = New-Object ('Microsoft.SqlServer.Management.Smo.Server') (New-SqlServerConnection $SqlServerName $UserName $securePassword)
+                $server = New-Object ('Microsoft.SqlServer.Management.Smo.Server') (New-SqlServerConnection $SqlServerName $Username $securePassword)
                 $server.KillAllProcesses($originalDatabaseName)
                 $server.Databases[$originalDatabaseName].Drop()
                 $server.Databases[$DatabaseName].Rename($originalDatabaseName)
