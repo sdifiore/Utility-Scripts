@@ -161,7 +161,7 @@ function Reset-OrchardCoreApp
 
         # Validating and setting up database server connection.
 
-        $SetupDatabaseConnectionString = ''
+        $setupDatabaseConnectionString = ''
         if ($PSCmdlet.ParameterSetName -eq 'ServerDB')
         {
             if ($SuffixDatabaseNameWithFolderName.IsPresent)
@@ -209,7 +209,7 @@ function Reset-OrchardCoreApp
                 }
             }
 
-            $Security = if (-not $SetupDatabaseSqlPassword)
+            $security = if (-not $SetupDatabaseSqlPassword)
             {
                 'Integrated Security=True'
             }
@@ -219,7 +219,7 @@ function Reset-OrchardCoreApp
             }
 
             # MARS is necessary for Orchard.
-            $SetupDatabaseConnectionString = "Server=$SetupDatabaseServerName;Database=$SetupDatabaseName;$Security;MultipleActiveResultSets=True;"
+            $setupDatabaseConnectionString = "Server=$SetupDatabaseServerName;Database=$SetupDatabaseName;$security;MultipleActiveResultSets=True;"
         }
 
 
@@ -321,7 +321,7 @@ function Reset-OrchardCoreApp
             SiteName = $SetupSiteName
             DatabaseProvider = $SetupDatabaseProvider
             TablePrefix = $SetupDatabaseTablePrefix
-            ConnectionString = $SetupDatabaseConnectionString
+            ConnectionString = $setupDatabaseConnectionString
             RecipeName = $SetupRecipeName
             UserName = $SetupUserName
             Password = $SetupPassword

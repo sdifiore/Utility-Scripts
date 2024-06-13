@@ -23,8 +23,8 @@ function Test-SqlServer
 
     Process
     {
-        $Connection = New-SqlServerConnection $ServerName $UserName $Password
+        $connection = New-SqlServerConnection $ServerName $UserName $Password
 
-        return $null -ne (New-Object ('Microsoft.SqlServer.Management.Smo.Server') $Connection).InstanceName
+        return $null -ne (New-Object ('Microsoft.SqlServer.Management.Smo.Server') $connection).InstanceName
     }
 }

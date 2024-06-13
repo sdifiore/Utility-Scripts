@@ -46,9 +46,9 @@ function Get-VisualStudioProjectNuGetPackage
             ForEach-Object { $PSItem.Trim() } |
             Where-Object { $PSItem.StartsWith('>') } |
             ForEach-Object {
-                ($Name, $Requested, $Resolved) = $PSItem.TrimStart('>').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
+                ($name, $requested, $resolved) = $PSItem.TrimStart('>').Split(' ', [System.StringSplitOptions]::RemoveEmptyEntries)
 
-                New-Object PSObject -Property @{ Name = $Name; Requested = $Requested; Resolved = $Resolved }
+                New-Object PSObject -Property @{ Name = $name; Requested = $requested; Resolved = $resolved }
             }
 
         if (-not [string]::IsNullOrEmpty($PackageNameFilter))

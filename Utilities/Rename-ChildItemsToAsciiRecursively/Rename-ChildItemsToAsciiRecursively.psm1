@@ -50,7 +50,7 @@
     }
 }
 
-function Get-AsciiName([string] $name)
+function Get-AsciiName([string] $Name)
 {
-    return [System.Text.Encoding]::ASCII.GetString([System.Text.Encoding]::ASCII.GetBytes($name)).Replace('?', '_')
+    return [System.Text.Encoding]::ASCII.GetString([System.Text.Encoding]::ASCII.GetBytes($Name)).Replace('?', '_')
 }
