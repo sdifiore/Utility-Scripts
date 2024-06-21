@@ -241,7 +241,7 @@ function Reset-OrchardCoreApp
         {
             $launchSettings = Get-Content $launchSettingsFilePath | ConvertFrom-Json
 
-            $applicationUrlSetting = $launchSettings.profiles."$SiteName".applicationUrl
+            $applicationUrlSetting = $launchSettings.profiles."$siteName".applicationUrl
 
             if (-not [string]::IsNullOrEmpty($applicationUrlSetting))
             {
@@ -255,7 +255,7 @@ function Reset-OrchardCoreApp
                 }
             }
 
-            $environmentSetting = $launchSettings.profiles."$SiteName".environmentVariables.ASPNETCORE_ENVIRONMENT
+            $environmentSetting = $launchSettings.profiles."$siteName".environmentVariables.ASPNETCORE_ENVIRONMENT
 
             if ([string]::IsNullOrEmpty($environmentSetting))
             {
@@ -369,7 +369,7 @@ function Reset-OrchardCoreApp
 function GetWebProjectDllPath([string] $WebProjectPath)
 {
     $siteName = Split-Path $WebProjectPath -Leaf
-    $webProjectDllPathPattern = "$WebProjectPath\bin\Debug\netcoreapp*\$SiteName.dll"
+    $webProjectDllPathPattern = "$WebProjectPath\bin\Debug\netcoreapp*\$siteName.dll"
 
     # To avoid Resolve-Path from throwing exception if no path matches the pattern.
     if (Test-Path $webProjectDllPathPattern)
