@@ -37,7 +37,7 @@ function Get-ProcessId
             }
             else
             {
-                Get-CimInstance Win32_Process -Filter "name = '${Name}.exe'" |
+                Get-CimInstance Win32_Process -Filter "name = '$Name.exe'" |
                     ForEach-Object { @{ Id = $PSItem.Handle; CommandLine = $PSItem.CommandLine } }
             })
 
