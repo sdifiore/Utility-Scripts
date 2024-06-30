@@ -82,10 +82,10 @@ function Import-BacpacToSqlServer
     Process
     {
         # Setting up SQL Package executable path.
-        $sqlPackageExecutablePath = ''
+        $finalSqlPackageExecutablePath = ''
         if (-not [string]::IsNullOrEmpty($SqlPackageExecutablePath) -and (Test-Path $SqlPackageExecutablePath))
         {
-            $sqlPackageExecutablePath = $SqlPackageExecutablePath
+            $finalSqlPackageExecutablePath = $SqlPackageExecutablePath
         }
         else
         {
@@ -107,12 +107,12 @@ function Import-BacpacToSqlServer
 
             if ([string]::IsNullOrWhiteSpace($locatedPath))
             {
-                $sqlPackageExecutablePath = $defaultSqlPackageExecutablePath
-                Write-Verbose "SQL Package executable for importing the database found at '$sqlPackageExecutablePath'!"
+                $finalSqlPackageExecutablePath = $defaultSqlPackageExecutablePath
+                Write-Verbose "SQL Package executable for importing the database found at '$finalSqlPackageExecutablePath'!"
             }
         }
 
-        if ([string]::IsNullOrEmpty($sqlPackageExecutablePath))
+        if ([string]::IsNullOrEmpty($finalSqlPackageExecutablePath))
         {
             throw ('No SQL Package executable found for importing the database! You can download it from' +
                 ' "https://learn.microsoft.com/en-us/sql/tools/sqlpackage/sqlpackage-download"!')
@@ -150,16 +150,16 @@ function Import-BacpacToSqlServer
                 $DatabaseName = $databaseSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
-            $UsernameSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('User Id=') }
-            if (-not [string]::IsNullOrEmpty($UsernameSegment))
+            $usernameSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('User Id=') }
+            if (-not [string]::IsNullOrEmpty($usernameSegment))
             {
-                $Username = $UsernameSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
+                $Username = $usernameSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
 
-            $PasswordSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('Password=') }
-            if (-not [string]::IsNullOrEmpty($PasswordSegment))
+            $passwordSegment = $connectionStringSegments | Where-Object { $PSItem.StartsWith('Password=') }
+            if (-not [string]::IsNullOrEmpty($passwordSegment))
             {
-                $Password = $PasswordSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
+                $Password = $passwordSegment.Split('=', 2, [System.StringSplitOptions]::RemoveEmptyEntries)[1]
             }
         }
 
@@ -231,7 +231,7 @@ function Import-BacpacToSqlServer
         }
 
         # And now we get to actually importing the database after setting up all the necessary parameters.
-        & "$sqlPackageExecutablePath" @parameters
+        & "$finalSqlPackageExecutablePath" @parameters
 
 
 
@@ -242,7 +242,7 @@ function Import-BacpacToSqlServer
             # imported.
             if ($databaseExists)
             {
-                $server = New-Object ('Microsoft.SqlServer.Management.Smo.Server') (New-SqlServerConnection $SqlServerName $UserName $securePassword)
+                $server = New-Object ('Microsoft.SqlServer.Management.Smo.Server') (New-SqlServerConnection $SqlServerName $Username $securePassword)
                 $server.KillAllProcesses($originalDatabaseName)
                 $server.Databases[$originalDatabaseName].Drop()
                 $server.Databases[$DatabaseName].Rename($originalDatabaseName)

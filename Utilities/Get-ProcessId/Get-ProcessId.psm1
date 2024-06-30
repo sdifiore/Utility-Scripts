@@ -31,13 +31,13 @@ function Get-ProcessId
 
         if (-not $CommandLine) { return $processes | ForEach-Object { $PSItem.Id } }
 
-        [hashtable[]] $processes = $(if ($host.Version.Major -ge 7)
+        [hashtable[]] $processes = $(if ($Host.Version.Major -ge 7)
             {
                 $processes | ForEach-Object { @{ Id = $PSItem.Id; CommandLine = $PSItem.CommandLine } }
             }
             else
             {
-                Get-CimInstance Win32_Process -Filter "name = '${Name}.exe'" |
+                Get-CimInstance Win32_Process -Filter "name = '$Name.exe'" |
                     ForEach-Object { @{ Id = $PSItem.Handle; CommandLine = $PSItem.CommandLine } }
             })
 

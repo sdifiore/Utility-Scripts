@@ -161,7 +161,7 @@ function Reset-OrchardCoreApp
 
         # Validating and setting up database server connection.
 
-        $SetupDatabaseConnectionString = ''
+        $setupDatabaseConnectionString = ''
         if ($PSCmdlet.ParameterSetName -eq 'ServerDB')
         {
             if ($SuffixDatabaseNameWithFolderName.IsPresent)
@@ -209,7 +209,7 @@ function Reset-OrchardCoreApp
                 }
             }
 
-            $Security = if (-not $SetupDatabaseSqlPassword)
+            $security = if (-not $SetupDatabaseSqlPassword)
             {
                 'Integrated Security=True'
             }
@@ -219,7 +219,7 @@ function Reset-OrchardCoreApp
             }
 
             # MARS is necessary for Orchard.
-            $SetupDatabaseConnectionString = "Server=$SetupDatabaseServerName;Database=$SetupDatabaseName;$Security;MultipleActiveResultSets=True;"
+            $setupDatabaseConnectionString = "Server=$SetupDatabaseServerName;Database=$SetupDatabaseName;$security;MultipleActiveResultSets=True;"
         }
 
 
@@ -241,7 +241,7 @@ function Reset-OrchardCoreApp
         {
             $launchSettings = Get-Content $launchSettingsFilePath | ConvertFrom-Json
 
-            $applicationUrlSetting = $launchSettings.profiles."$SiteName".applicationUrl
+            $applicationUrlSetting = $launchSettings.profiles."$siteName".applicationUrl
 
             if (-not [string]::IsNullOrEmpty($applicationUrlSetting))
             {
@@ -255,7 +255,7 @@ function Reset-OrchardCoreApp
                 }
             }
 
-            $environmentSetting = $launchSettings.profiles."$SiteName".environmentVariables.ASPNETCORE_ENVIRONMENT
+            $environmentSetting = $launchSettings.profiles."$siteName".environmentVariables.ASPNETCORE_ENVIRONMENT
 
             if ([string]::IsNullOrEmpty($environmentSetting))
             {
@@ -321,7 +321,7 @@ function Reset-OrchardCoreApp
             SiteName = $SetupSiteName
             DatabaseProvider = $SetupDatabaseProvider
             TablePrefix = $SetupDatabaseTablePrefix
-            ConnectionString = $SetupDatabaseConnectionString
+            ConnectionString = $setupDatabaseConnectionString
             RecipeName = $SetupRecipeName
             UserName = $SetupUserName
             Password = $SetupPassword
@@ -369,7 +369,7 @@ function Reset-OrchardCoreApp
 function GetWebProjectDllPath([string] $WebProjectPath)
 {
     $siteName = Split-Path $WebProjectPath -Leaf
-    $webProjectDllPathPattern = "$WebProjectPath\bin\Debug\netcoreapp*\$SiteName.dll"
+    $webProjectDllPathPattern = "$WebProjectPath\bin\Debug\netcoreapp*\$siteName.dll"
 
     # To avoid Resolve-Path from throwing exception if no path matches the pattern.
     if (Test-Path $webProjectDllPathPattern)

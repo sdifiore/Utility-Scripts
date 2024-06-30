@@ -5,30 +5,33 @@
 
 
 # Session.FileTransferProgress event handler.
-function FileTransferProgress
+function Get-FtpFileTransferProgress
 {
     param
     (
-        [System.Object] $transferEvent
+        [System.Object] $TransferEvent
     )
 
-    if ($null -ne $script:lastFileName -and $script:lastFileName -ne $transferEvent.FileName)
+    Process
     {
-        Write-Verbose "Next File: $($transferEvent.FileName)"
-    }
+        if ($null -ne $script:lastFileName -and $script:lastFileName -ne $TransferEvent.FileName)
+        {
+            Write-Verbose "Next File: $($TransferEvent.FileName)"
+        }
 
-    $currentFileName = $transferEvent.FileName
-    $currentFileProgress = $transferEvent.FileProgress
+        $currentFileName = $TransferEvent.FileName
+        $currentFileProgress = $TransferEvent.FileProgress
 
-    # If the progress changed compared to the previous state.
-    if ($currentFileName -ne $script:lastFileName -or $currentFileProgress -ne $script:lastFileProgress)
-    {
-        # Print transfer progress.
-        Write-Verbose ("$($transferEvent.FileName): $($transferEvent.FileProgress * 100)%, Overall: $($transferEvent.OverallProgress * 100)%")
+        # If the progress changed compared to the previous state.
+        if ($currentFileName -ne $script:lastFileName -or $currentFileProgress -ne $script:lastFileProgress)
+        {
+            # Print transfer progress.
+            Write-Verbose ("$($TransferEvent.FileName): $($TransferEvent.FileProgress * 100)%, Overall: $($TransferEvent.OverallProgress * 100)%")
 
-        # Remember the name of the last file reported.
-        $script:lastFileName = $transferEvent.FileName
-        $script:lastFileProgress = $transferEvent.FileProgress
+            # Remember the name of the last file reported.
+            $script:lastFileName = $TransferEvent.FileName
+            $script:lastFileProgress = $TransferEvent.FileProgress
+        }
     }
 }
 
@@ -82,7 +85,7 @@ function Get-FtpFile
 
         try
         {
-            $session.add_FileTransferProgress({ FileTransferProgress($PSItem) })
+            $session.add_FileTransferProgress({ Get-FtpFileTransferProgress($PSItem) })
 
             $session.Open($sessionOptions)
 
